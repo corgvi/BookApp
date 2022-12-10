@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screen.LoginActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:text="Log In"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/tvlogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:text="Let's Log In"
+        android:layout_marginTop="64dp"
+        android:layout_marginLeft="16dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/toolbar"/>
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="You already have an account login"
+        android:textSize="18sp"
+        android:layout_below="@id/tvlogin"
+        android:layout_margin="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/bg_ed_white"
+        android:layout_below="@id/tv_desc"
+        android:hint="Username..."
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:paddingStart="8dp"
+        android:id="@+id/ed_username"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="@color/black"
+        android:inputType="textPassword"
+        android:background="@drawable/bg_ed_white"
+        android:layout_below="@id/ed_username"
+        android:layout_marginTop="32dp"
+        android:hint="Password..."
+        android:textColorHint="@color/black"
+        android:paddingStart="8dp"
+        android:id="@+id/ed_password"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password ?"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/purple_700"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="32dp"
+        android:layout_below="@id/ed_password"/>
+    
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_login"
+        android:layout_below="@id/ed_password"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="64dp"
+        android:text="Login"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginHorizontal="32dp"
+        android:background="@drawable/bg_btn_black"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Don't have an account ?"
+        android:layout_below="@id/btn_login"
+        android:layout_marginLeft="110dp"
+        android:textColor="@color/black"
+        android:layout_marginTop="32dp"/>
+    <TextView
+        android:id="@+id/tv_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  Register"
+        android:textColor="@color/purple_700"
+        android:layout_toRightOf="@id/tv"
+        android:layout_below="@id/btn_login"
+        android:layout_marginTop="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_below="@id/tv_register"
+        android:textColor="@color/black"
+        android:text="Thank you for logging in"
+        android:layout_marginTop="64dp"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

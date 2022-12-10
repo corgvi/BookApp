@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screen.ProfileActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:text="Log In"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_height="300dp"
+        android:src="@color/black"
+        android:id="@+id/img_bg"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/img_bg"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="-70dp"
+        android:src="@color/purple_200"
+        android:id="@+id/img_profile"/>
+
+    <TextView
+        android:id="@+id/tv_fullname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cuong Vu"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:layout_marginStart="16dp"
+        android:layout_below="@id/img_profile"/>
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_fullname"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="68dp"
+        android:layout_toRightOf="@id/img_email"
+        android:text="cuongbhsoft@gmail.com"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/img_email"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_baseline_email_24"
+        android:layout_below="@id/tv_fullname"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginRight="16dp"/>
+    <TextView
+        android:id="@+id/tv_firebaseId"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:layout_toRightOf="@id/img_email"
+        android:text="cuongbhsoft@gmail.com"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/img_firebsaeId"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_baseline_key_24"
+        android:layout_below="@id/img_email"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"/>
+    <TextView
+        android:id="@+id/tv_userId"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_firebaseId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:layout_toRightOf="@id/img_email"
+        android:text="cuongbhsoft@gmail.com"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/img_useId"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/img_firebsaeId"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_baseline_vpn_key_off_24" />
+
+</RelativeLayout>

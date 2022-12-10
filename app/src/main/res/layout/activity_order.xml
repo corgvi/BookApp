@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screen.OrderActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_book"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/bg_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@drawable/bg_gradient"
+            app:layout_constraintBottom_toBottomOf="@+id/img_book"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0">
+
+            <TextView
+                android:layout_marginTop="200dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Doremon"
+                android:textAlignment="center"
+                android:textSize="26sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:id="@+id/tv_name_book"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="by Cuon Vu"
+                android:textAlignment="center"
+                android:layout_below="@id/tv_name_book"
+                android:textColor="#CDCDCD"
+                android:textSize="20sp"
+                android:id="@+id/tv_author"/>
+
+            <RelativeLayout
+                android:id="@+id/layout_thong_ke"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@+id/tv_author"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:elevation="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/layout_rate"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_rate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="Rate"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:id="@+id/tv_rate_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_rate"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="20dp" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:id="@+id/view1"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_toRightOf="@id/layout_rate"
+                        android:background="@color/white" />
+
+                    <RelativeLayout
+                        android:id="@+id/layout_nxb"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@id/view1"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_nxb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="Nhà xuất bản"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:id="@+id/tv_nxb_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_nxb"
+                            android:gravity="center"
+                            android:text="Cuong Vu"
+                            android:textColor="@color/white"
+                            android:textSize="20dp" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Introduction"
+                android:textSize="20sp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="description"
+                android:id="@+id/tv_desc"
+                android:layout_marginTop="8dp"/>
+
+            <LinearLayout
+                android:id="@+id/btn_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_btn_white"
+                android:layout_marginTop="16dp"
+                android:paddingVertical="6dp"
+                android:paddingHorizontal="16dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/shopping_cart"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="Add to cart"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="100.000 VND"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textAlignment="textEnd"
+                    tools:ignore="RtlCompat" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
