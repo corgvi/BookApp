@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,16 +15,15 @@ import com.example.demobhsoft.firebase.SachDAO
 import com.example.demobhsoft.firebase.UserDAO
 import com.example.demobhsoft.model.SachModel
 import com.example.demobhsoft.model.UserModel
+import com.example.demobhsoft.screen.CartActivity.CartActivity
 import com.example.demobhsoft.screen.MainActivity.adapter.PopularBooksAdapter
 import com.example.demobhsoft.screen.MainActivity.adapter.TopMemberAdapter
 import com.example.demobhsoft.screen.MainActivity.adapter.TrendingBooksAdapter
 import com.example.demobhsoft.screen.ProfileActivity
 import com.example.demobhsoft.utils.Constant
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
     private lateinit var userDAO: UserDAO
@@ -32,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mySharedPreferences: MySharedPreferences
     private lateinit var tvFullname: TextView
     private lateinit var tvEmail: TextView
+    private lateinit var imgCart: ImageView
     private lateinit var imgUser: CircleImageView
     private lateinit var rcvTopMembers: RecyclerView
     private lateinit var rcvTrendingBooks: RecyclerView
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         tvFullname = findViewById(R.id.tv_fullname)
         tvEmail = findViewById(R.id.tv_email)
         imgUser = findViewById(R.id.img_avatar)
+        imgCart = findViewById(R.id.img_cart)
         rcvTopMembers = findViewById(R.id.rcv_top_members)
         rcvPopularBooks = findViewById(R.id.rcv_popular_books)
         rcvTrendingBooks = findViewById(R.id.rcv_trend_books)
@@ -82,6 +83,10 @@ class MainActivity : AppCompatActivity() {
         popularBooksAdapter = PopularBooksAdapter(listSach, this)
         rcvPopularBooks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rcvPopularBooks.adapter = popularBooksAdapter
+
+        imgCart.setOnClickListener{
+            startActivity(Intent(this, CartActivity::class.java))
+        }
     }
 
     private fun getListUser(){

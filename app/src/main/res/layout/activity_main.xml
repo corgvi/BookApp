@@ -42,6 +42,7 @@
         android:layout_marginLeft="16dp"/>
 
     <ImageView
+        android:id="@+id/img_cart"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"

@@ -10,7 +10,11 @@ class Constant {
 
     }
 
-    object DONHANG{
-        const val TB_DONHANG = "DonHang"
+    object GIOHANG{
+        const val TB_GIOHANG = "GioHang"
     }
+//
+//    object DonHang{
+//        const val TB_DONHANG = "DonHang"
+//    }
 }

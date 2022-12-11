@@ -6,10 +6,13 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
+import com.example.demobhsoft.datalocal.MySharedPreferences
+import com.example.demobhsoft.firebase.GioHangDAO
+import com.example.demobhsoft.model.GioHang
 import com.example.demobhsoft.model.SachModel
+import com.example.demobhsoft.model.UserModel
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -24,6 +27,8 @@ class OrderActivity : AppCompatActivity() {
     private lateinit var tvNXB: TextView
     private lateinit var imgBook: ImageView
     private lateinit var btnAdd: LinearLayout
+    private lateinit var donHangDAO: GioHangDAO
+    private lateinit var mySharedPreferences: MySharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +57,14 @@ class OrderActivity : AppCompatActivity() {
             .placeholder(R.drawable.ic_baseline_file_download_off_24)
             .into(imgBook);
 
+        donHangDAO = GioHangDAO()
+        mySharedPreferences = MySharedPreferences()
+        val user: UserModel? = mySharedPreferences.getModel(this);
+
         btnAdd.setOnClickListener{
-            Toast.makeText(this, "Add", Toast.LENGTH_SHORT).show()
+            donHangDAO.addToCart(sach, user!!, GioHang(sach.sachId, user.userId, 1, 0), this)
         }
     }
+
+
 }

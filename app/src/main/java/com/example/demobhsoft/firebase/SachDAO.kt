@@ -8,6 +8,7 @@ import com.example.demobhsoft.model.UserModel
 import com.example.demobhsoft.screen.LoginActivity
 import com.example.demobhsoft.utils.Constant
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,6 +36,18 @@ class SachDAO {
             }
         Log.d(TAG, "getListUser: listUser: ${listSach.size}")
         return listSach
+    }
+
+    fun getSach(sachId: String): SachModel{
+        var sach = SachModel()
+        db.collection(Constant.SACH.TB_SACH)
+            .document(sachId)
+            .get()
+            .addOnSuccessListener { task ->
+                sach = task.toObject<SachModel>(SachModel::class.java)!!
+            }
+
+        return sach
     }
 
     fun initSachModel(){

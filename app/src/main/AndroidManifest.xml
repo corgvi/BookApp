@@ -15,6 +15,13 @@
         android:theme="@style/Theme.DemoBHSoft"
         tools:targetApi="31">
         <activity
+            android:name=".screen.CartActivity.CartActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".screen.OrderActivity"
             android:exported="false">
             <meta-data
