@@ -31,4 +31,10 @@ class MySharedPreferences {
         } else UserModel()
     }
 
+    fun clearModel(context: Context) {
+        val sharedPreference: SharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreference.edit()
+        editor.clear().commit()
+    }
+
 }

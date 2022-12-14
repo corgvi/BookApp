@@ -3,9 +3,14 @@ package com.example.demobhsoft.screen.MainActivity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.SearchView
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -13,6 +18,7 @@ import com.example.demobhsoft.R
 import com.example.demobhsoft.datalocal.MySharedPreferences
 import com.example.demobhsoft.firebase.SachDAO
 import com.example.demobhsoft.firebase.UserDAO
+import com.example.demobhsoft.model.GioHang
 import com.example.demobhsoft.model.SachModel
 import com.example.demobhsoft.model.UserModel
 import com.example.demobhsoft.screen.CartActivity.CartActivity
@@ -29,8 +35,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userDAO: UserDAO
     val TAG = "zzzz"
     private lateinit var mySharedPreferences: MySharedPreferences
+    private lateinit var searchView: EditText
     private lateinit var tvFullname: TextView
     private lateinit var tvEmail: TextView
+    private lateinit var tvBadge: TextView
     private lateinit var imgCart: ImageView
     private lateinit var imgUser: CircleImageView
     private lateinit var rcvTopMembers: RecyclerView
@@ -38,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rcvPopularBooks: RecyclerView
     private var listUser = ArrayList<UserModel>()
     private var listSach = ArrayList<SachModel>()
+    private val listGioHang = ArrayList<GioHang>()
     private lateinit var topMemberAdapter: TopMemberAdapter
     private lateinit var trendingBooksAdapter: TrendingBooksAdapter
     private lateinit var popularBooksAdapter: PopularBooksAdapter
@@ -52,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         tvEmail = findViewById(R.id.tv_email)
         imgUser = findViewById(R.id.img_avatar)
         imgCart = findViewById(R.id.img_cart)
+        tvBadge = findViewById(R.id.tv_badge)
         rcvTopMembers = findViewById(R.id.rcv_top_members)
         rcvPopularBooks = findViewById(R.id.rcv_popular_books)
         rcvTrendingBooks = findViewById(R.id.rcv_trend_books)
@@ -87,6 +97,8 @@ class MainActivity : AppCompatActivity() {
         imgCart.setOnClickListener{
             startActivity(Intent(this, CartActivity::class.java))
         }
+        getListDonHangByUserId()
+        initSearchView()
     }
 
     private fun getListUser(){
@@ -123,6 +135,61 @@ class MainActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
             }
+    }
+
+    private fun getListDonHangByUserId(){
+        var total = 0
+        val user: UserModel = mySharedPreferences.getModel(this)!!
+        db.collection(Constant.GIOHANG.TB_GIOHANG)
+            .get()
+            .addOnSuccessListener { task ->
+                listGioHang.clear()
+                for(document in task){
+                    val donHang: GioHang = document.toObject(GioHang::class.java)
+                    if(user.userId.equals(donHang.userId)){
+                        listGioHang.add(donHang)
+                        tvBadge.text = listGioHang.size.toString()
+                    }
+                }
+            }
+            .addOnFailureListener{
+                Log.e(TAG, "getDonHang: ${it.message}", )
+            }
+    }
+
+    private fun initSearchView(){
+        searchView = findViewById(R.id.ed_search)
+        searchView.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val str = s.toString()
+                val listFilter = ArrayList<SachModel>()
+                for ( sach in listSach){
+                    if (sach.name.contains(str, true)){
+                        listFilter.add(sach)
+                    }
+                }
+
+                if(s!!.isEmpty()){
+                    popularBooksAdapter.setList(listSach)
+                    trendingBooksAdapter.setList(listSach)
+                } else {
+                    popularBooksAdapter.setList(listFilter)
+                    trendingBooksAdapter.setList(listFilter)
+
+                }
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getListDonHangByUserId()
     }
 
 }

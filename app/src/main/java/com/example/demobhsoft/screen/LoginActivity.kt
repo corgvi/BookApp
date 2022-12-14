@@ -52,6 +52,10 @@ class LoginActivity : AppCompatActivity() {
         tvRegister = findViewById(R.id.tv_register)
         mySharedPreferences = MySharedPreferences()
         btnLogin.setOnClickListener {
+            if(edPassword.text.isEmpty() || edUsername.text.isEmpty()){
+                Toast.makeText(this, "Please do not leave the data field blank", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             userDAO.loginUser(edUsername.text.toString(), edPassword.text.toString(), listUser, this)
         }
         tvRegister.setOnClickListener {

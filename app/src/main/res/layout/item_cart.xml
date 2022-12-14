@@ -9,8 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="140dp">
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/check_status"
+            android:buttonTint="@color/black"
+            android:layout_centerVertical="true"/>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardviewImg"
+            android:layout_toRightOf="@id/check_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp">
@@ -25,11 +33,12 @@
 
         <TextView
             android:id="@+id/tv_name_book"
-            android:layout_width="210dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/cardviewImg"
             android:text="Truyen"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -47,10 +56,10 @@
 
         <ImageView
             android:id="@+id/btn_delete"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_baseline_delete_outline_24" />
 
@@ -114,7 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/cardview"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
         android:background="#5A5A5A" />
 </LinearLayout>

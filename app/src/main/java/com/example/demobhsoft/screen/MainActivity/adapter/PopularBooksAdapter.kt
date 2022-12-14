@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
 import com.example.demobhsoft.model.SachModel
+import com.example.demobhsoft.utils.ConvertToVND
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -31,10 +32,9 @@ class PopularBooksAdapter(val listSach: ArrayList<SachModel>, val mContext: Cont
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: PopularBooksViewHolder, position: Int) {
-        val formatter: NumberFormat = DecimalFormat("#,###")
         val sach: SachModel = mListSach.get(position)
         holder.tvName.text = sach.name
-        holder.tvPrice.text = "${formatter.format(sach.price)} VND"
+        holder.tvPrice.text = ConvertToVND(sach.price)
         Glide.with(mContext)
             .load(sach?.thumbnail)
             .centerCrop()

@@ -13,8 +13,8 @@ class Constant {
     object GIOHANG{
         const val TB_GIOHANG = "GioHang"
     }
-//
-//    object DonHang{
-//        const val TB_DONHANG = "DonHang"
-//    }
+
+    object DonHang{
+        const val TB_DONHANG = "DonHang"
+    }
 }

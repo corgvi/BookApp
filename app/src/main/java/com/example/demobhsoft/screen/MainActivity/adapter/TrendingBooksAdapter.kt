@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
 import com.example.demobhsoft.model.SachModel
 import com.example.demobhsoft.screen.OrderActivity
+import com.example.demobhsoft.utils.ConvertToVND
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -37,7 +38,7 @@ class TrendingBooksAdapter(val listSach: ArrayList<SachModel>, val mContext: Con
         val formatter: NumberFormat = DecimalFormat("#,###")
         val sach: SachModel = mListSach.get(position)
         holder.tvName.text = sach.name
-        holder.tvPrice.text = "${formatter.format(sach.price)} VND"
+        holder.tvPrice.text = ConvertToVND(sach.price)
         Glide.with(mContext)
             .load(sach?.thumbnail)
             .centerCrop()

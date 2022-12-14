@@ -50,6 +50,10 @@ class RegisterActivity : AppCompatActivity() {
         tvLogin = findViewById(R.id.tv_login)
         btnRegister.setOnClickListener {
             Log.d(TAG, "onCreate: onclick btnRegister")
+            if(edFullName.text.isEmpty() || edUsername.text.isNotEmpty() || edPassword.text.isEmpty()){
+                Toast.makeText(this, "Please do not leave the data field blank", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             var user = UserModel(randomUUID(), edUsername.text.toString(), edPassword.text.toString(), edFullName.text.toString());
             userDAO.createUserWithEmail(user, this)
         }

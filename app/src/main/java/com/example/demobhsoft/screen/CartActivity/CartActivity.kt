@@ -1,11 +1,14 @@
 package com.example.demobhsoft.screen.CartActivity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demobhsoft.R
@@ -15,7 +18,9 @@ import com.example.demobhsoft.model.GioHang
 import com.example.demobhsoft.model.SachModel
 import com.example.demobhsoft.model.UserModel
 import com.example.demobhsoft.screen.CartActivity.adapter.CartUnpaidAdapter
+import com.example.demobhsoft.screen.CheckOutActivity.CheckOutActivity
 import com.example.demobhsoft.utils.Constant
+import com.example.demobhsoft.utils.ConvertToVND
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -27,7 +32,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var btnCheckOrder: RelativeLayout
     private lateinit var tvTotal: TextView
     private lateinit var rcvCart: RecyclerView
-    private lateinit var donHangDAO: GioHangDAO
+    private lateinit var toolbar: Toolbar
     private val TAG = "CartActivity"
     private var list = ArrayList<GioHang>()
     private val db = Firebase.firestore
@@ -37,15 +42,23 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         btnCheckOrder = findViewById(R.id.btn_check_order)
         tvTotal = findViewById(R.id.tv_total)
         rcvCart = findViewById(R.id.rcv_cart)
         btnCheckOrder.setOnClickListener {
-            Toast.makeText(this, "Check Order", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, CheckOutActivity::class.java))
         }
         getListDonHangByUserId()
         rcvCart.layoutManager = LinearLayoutManager(this)
-        cartUnpaidAdapter = CartUnpaidAdapter(list, this) { gioHang: GioHang, amount: Int ->
+        cartUnpaidAdapter = CartUnpaidAdapter(list, this) { gioHang: GioHang, amount: Int, isCheck: Boolean ->
+            Log.d(TAG, "onCreate: isCheck = $isCheck")
+            gioHang.status = isCheck
             gioHang.amount = amount
             db.collection(Constant.GIOHANG.TB_GIOHANG).document(gioHang.id)
                 .set(gioHang)
@@ -73,9 +86,12 @@ class CartActivity : AppCompatActivity() {
                         list.add(donHang)
                         db.collection(Constant.SACH.TB_SACH).document(donHang.sachId).get()
                             .addOnSuccessListener { task ->
-                                val sach: SachModel? = task.toObject(SachModel::class.java)
-                                total += sach!!.price*donHang.amount
-                                tvTotal.text = "$total VND"
+                                if(donHang.status){
+                                    val sach: SachModel? = task.toObject(SachModel::class.java)
+                                    total += sach!!.price*donHang.amount
+                                    tvTotal.text = ConvertToVND(total)
+                                }
+
                             }
                     }
                 }
@@ -84,5 +100,9 @@ class CartActivity : AppCompatActivity() {
             .addOnFailureListener{
                 Log.e(TAG, "getDonHang: ${it.message}", )
             }
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

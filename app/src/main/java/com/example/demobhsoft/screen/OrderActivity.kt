@@ -62,7 +62,7 @@ class OrderActivity : AppCompatActivity() {
         val user: UserModel? = mySharedPreferences.getModel(this);
 
         btnAdd.setOnClickListener{
-            donHangDAO.addToCart(sach, user!!, GioHang(sach.sachId, user.userId, 1, 0), this)
+            donHangDAO.addToCart(sach, user!!, GioHang(sach.sachId, user.userId, 1, false), this)
         }
     }
 
