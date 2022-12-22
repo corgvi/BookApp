@@ -3,10 +3,12 @@ package com.example.demobhsoft.firebase
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import com.example.demobhsoft.model.GioHang
 import com.example.demobhsoft.model.SachModel
 import com.example.demobhsoft.model.UserModel
 import com.example.demobhsoft.screen.LoginActivity
 import com.example.demobhsoft.utils.Constant
+import com.example.demobhsoft.utils.ConvertToVND
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -19,7 +21,7 @@ class SachDAO {
     private val db = Firebase.firestore
     private val TAG = "SachDAO"
 
-    fun getListSach(): ArrayList<SachModel> {
+    fun getListSach(list: (ArrayList<SachModel>) -> Unit){
         var listSach = ArrayList<SachModel>()
         db.collection(Constant.SACH.TB_SACH)
             .get()
@@ -29,13 +31,40 @@ class SachDAO {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     val sach: SachModel = document.toObject(SachModel::class.java)
                     listSach.add(sach)
+                    list(listSach)
                 }
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
             }
         Log.d(TAG, "getListUser: listUser: ${listSach.size}")
-        return listSach
+    }
+
+    fun getListSachByGioHang(gioHang: GioHang, price:(Int) -> Unit, list: (ArrayList<SachModel>) -> Unit){
+        var total = 0
+        var listSach = ArrayList<SachModel>()
+        db.collection(Constant.SACH.TB_SACH)
+            .get()
+            .addOnSuccessListener { task ->
+                listSach.clear()
+                for (document in task) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    val sach: SachModel = document.toObject(SachModel::class.java)
+                    listSach.add(sach)
+                    list(listSach)
+                    db.collection(Constant.SACH.TB_SACH).document(gioHang.sachId).get()
+                        .addOnSuccessListener { task ->
+                            if(gioHang.status){
+                                val sach: SachModel? = task.toObject(SachModel::class.java)
+                                total += sach!!.price*gioHang.amount
+                                price(total)
+                            }
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
     }
 
     fun getSach(sachId: String): SachModel{

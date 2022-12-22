@@ -9,6 +9,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demobhsoft.R
@@ -21,6 +23,7 @@ import com.example.demobhsoft.screen.CartActivity.adapter.CartUnpaidAdapter
 import com.example.demobhsoft.screen.CheckOutActivity.CheckOutActivity
 import com.example.demobhsoft.utils.Constant
 import com.example.demobhsoft.utils.ConvertToVND
+import com.example.demobhsoft.viewmodel.CartViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -37,6 +40,13 @@ class CartActivity : AppCompatActivity() {
     private var list = ArrayList<GioHang>()
     private val db = Firebase.firestore
     private val mySharedPreferences = MySharedPreferences()
+    private val cartViewModel: CartViewModel by lazy {
+        ViewModelProvider(
+            this,
+            CartViewModel.CartViewModelFactory(this.application, this)
+        )[CartViewModel::class.java]
+    }
+    private lateinit var user: UserModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +64,7 @@ class CartActivity : AppCompatActivity() {
         btnCheckOrder.setOnClickListener {
             startActivity(Intent(this, CheckOutActivity::class.java))
         }
+        user = mySharedPreferences.getModel(this)!!
         getListDonHangByUserId()
         rcvCart.layoutManager = LinearLayoutManager(this)
         cartUnpaidAdapter = CartUnpaidAdapter(list, this) { gioHang: GioHang, amount: Int, isCheck: Boolean ->
@@ -69,13 +80,43 @@ class CartActivity : AppCompatActivity() {
                     Log.e(TAG, "update failed: ${e.message}",)
                 }
             getListDonHangByUserId()
+//            initViewModel()
         }
         rcvCart.adapter = cartUnpaidAdapter
+//        initViewModel()
+    }
+
+    private fun initViewModel() {
+        var listGioHang = ArrayList<GioHang>()
+
+        cartViewModel.getListGioHang()
+        cartViewModel.getListSach()
+        cartViewModel.mListGioHangLiveData.observe(this, Observer{ list ->
+            listGioHang.clear()
+            for (gioHang in list){
+                if(user.userId.equals(gioHang.userId)){
+                    listGioHang.add(gioHang)
+                    cartUnpaidAdapter.setList(listGioHang)
+                    cartViewModel.mListSachLiveData.observe(this, Observer {
+                        var total = 0
+                        for (sach in it){
+                            if (sach.sachId.equals(gioHang.sachId) && gioHang.status){
+                                Log.d(
+                                    TAG,
+                                    "initViewModel: sachId: ${sach.sachId} ====>>>> gio hang sach id; ${gioHang.sachId}"
+                                )
+                                total += sach!!.price*gioHang.amount
+                                tvTotal.text = ConvertToVND(total)
+                            }
+                        }
+                    })
+                }
+            }
+        })
     }
 
     private fun getListDonHangByUserId(){
         var total = 0
-        val user: UserModel = mySharedPreferences.getModel(this)!!
         db.collection(Constant.GIOHANG.TB_GIOHANG)
             .get()
             .addOnSuccessListener { task ->
@@ -89,6 +130,7 @@ class CartActivity : AppCompatActivity() {
                                 if(donHang.status){
                                     val sach: SachModel? = task.toObject(SachModel::class.java)
                                     total += sach!!.price*donHang.amount
+                                    Log.d(TAG, "getListDonHangByUserId: total= $total")
                                     tvTotal.text = ConvertToVND(total)
                                 }
 

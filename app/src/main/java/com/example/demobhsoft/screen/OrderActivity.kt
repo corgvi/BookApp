@@ -6,6 +6,8 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
+import coil.load
 import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
 import com.example.demobhsoft.datalocal.MySharedPreferences
@@ -29,6 +31,7 @@ class OrderActivity : AppCompatActivity() {
     private lateinit var btnAdd: LinearLayout
     private lateinit var donHangDAO: GioHangDAO
     private lateinit var mySharedPreferences: MySharedPreferences
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +54,11 @@ class OrderActivity : AppCompatActivity() {
         tvAuthor.text = "by ${sach.author}"
         tvNXB.text = sach.publisher
         tvRateNumber.text = sach.rate.toString()
-        Glide.with(this)
-            .load(sach?.thumbnail)
-            .centerCrop()
-            .placeholder(R.drawable.ic_baseline_file_download_off_24)
-            .into(imgBook);
+        imgBook.load(sach.thumbnail){
+            crossfade(true)
+            crossfade(500)
+            placeholder(R.drawable.ic_baseline_file_download_off_24)
+        }
 
         donHangDAO = GioHangDAO()
         mySharedPreferences = MySharedPreferences()
@@ -65,6 +68,8 @@ class OrderActivity : AppCompatActivity() {
             donHangDAO.addToCart(sach, user!!, GioHang(sach.sachId, user.userId, 1, false), this)
         }
     }
-
-
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

@@ -104,8 +104,7 @@ class CheckOutActivity : AppCompatActivity() {
                             .document(gioHang.id)
                             .delete()
                             .addOnSuccessListener {
-                                startActivity(Intent(this, CheckoutSuccessActivity::class.java))
-                                finish()
+
                             }
                             .addOnFailureListener{
                                 Toast.makeText(this, "Check out failed", Toast.LENGTH_SHORT).show()
@@ -127,6 +126,8 @@ class CheckOutActivity : AppCompatActivity() {
             .document("${donHang.id}")
             .set(donHang)
             .addOnSuccessListener {
+                startActivity(Intent(this, CheckoutSuccessActivity::class.java))
+                finish()
                 Toast.makeText(this, "Add to bill successful", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {

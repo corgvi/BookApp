@@ -47,7 +47,9 @@ class LoginActivity : AppCompatActivity() {
         edPassword = findViewById(R.id.ed_password)
         btnLogin = findViewById(R.id.btn_login)
         userDAO = UserDAO()
-        listUser = userDAO.getListUser()
+        userDAO.getListUser {
+            listUser.addAll(it)
+        }
         Log.d(TAG, "onCreate: ListUser $listUser")
         tvRegister = findViewById(R.id.tv_register)
         mySharedPreferences = MySharedPreferences()

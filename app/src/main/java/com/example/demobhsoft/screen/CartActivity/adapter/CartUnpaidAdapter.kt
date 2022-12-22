@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
 import com.example.demobhsoft.model.GioHang
@@ -19,6 +20,8 @@ import com.example.demobhsoft.utils.Constant
 import com.example.demobhsoft.utils.ConvertToVND
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 
 class CartUnpaidAdapter(val listDonHang: ArrayList<GioHang>, val mContext: Context,val callbacks:((GioHang, amount: Int, isCheck: Boolean) -> Unit)) :
     RecyclerView.Adapter<CartUnpaidAdapter.CartUnpaidViewHolder>() {
@@ -48,14 +51,14 @@ class CartUnpaidAdapter(val listDonHang: ArrayList<GioHang>, val mContext: Conte
             .addOnSuccessListener { task ->
                 val sach: SachModel? = task.toObject<SachModel>(SachModel::class.java)
                 Log.d(TAG, "onBindViewHolder: ${sach.toString()}")
-                Glide.with(mContext)
-                    .load(sach?.thumbnail)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_baseline_person_24)
-                    .into(holder.imgBook);
+                holder.imgBook.load(sach?.thumbnail){
+                    crossfade(true)
+                    crossfade(500)
+                    placeholder(R.drawable.ic_baseline_file_download_off_24)
+                }
                 holder.tvNameBook.text = sach?.name
                 holder.tvAmount.text = amount.toString()
-                holder.tvPrice.text = ConvertToVND(sach!!.price)
+                holder.tvPrice.text = ConvertToVND(sach?.price!! *amount)
                 holder.status.isChecked = gioHang.status
                 holder.status.setOnClickListener{
                     holder.status.isChecked = !isCheck
@@ -70,7 +73,7 @@ class CartUnpaidAdapter(val listDonHang: ArrayList<GioHang>, val mContext: Conte
                     }
                     amount++
                     holder.tvAmount.text = amount.toString()
-                    holder.tvPrice.text = "${sach?.price!! *amount} VND"
+                    holder.tvPrice.text = ConvertToVND(sach?.price!! *amount)
                     callbacks(gioHang, amount, isCheck)
                 }
                 holder.btnMinus.setOnClickListener{
@@ -80,36 +83,34 @@ class CartUnpaidAdapter(val listDonHang: ArrayList<GioHang>, val mContext: Conte
                     }
                     amount--
                     holder.tvAmount.text = amount.toString()
-                    holder.tvPrice.text = "${sach?.price!! *amount} VND"
+                    holder.tvPrice.text = ConvertToVND(sach?.price!! *amount)
                     callbacks(gioHang, amount, isCheck)
                 }
             }
         holder.btnDelete.setOnClickListener{
-            db.collection(Constant.GIOHANG.TB_GIOHANG)
-                .document(gioHang.id)
-                .delete()
-                .addOnSuccessListener { task ->
+
                     val builder = AlertDialog.Builder(mContext)
                     builder.setTitle("Alert")
                     builder.setMessage("Do you want to delete this item ?")
                     builder.setPositiveButton("OK"){dialog, which ->
-                        db.collection(Constant.GIOHANG.TB_GIOHANG)
-                            .document(gioHang.id)
-                            .delete()
-                            .addOnSuccessListener {
+                        GlobalScope.launch(Dispatchers.IO) {
+                            delay(1000L)
+
+                            var delete = db.collection(Constant.GIOHANG.TB_GIOHANG)
+                                .document(gioHang.id)
+                                .delete().await()
+
+                            withContext(Dispatchers.Main) {
                                 notifyDataSetChanged()
-                                Toast.makeText(mContext,"Deleted", Toast.LENGTH_SHORT).show()
                             }
+                        }
                     }
                     builder.setNegativeButton("No"){dialog, which ->
                         return@setNegativeButton
                     }
                     builder.show()
-                }
-                .addOnFailureListener{
-                    Log.e(TAG, "onBindViewHolder: delete failed: ${it.message}", )
-                    Toast.makeText(mContext, "Delete failed", Toast.LENGTH_SHORT).show()
-                }
+
+
         }
     }
 

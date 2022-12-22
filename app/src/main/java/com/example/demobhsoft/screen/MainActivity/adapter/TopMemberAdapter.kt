@@ -17,7 +17,6 @@ class TopMemberAdapter(val mContext: Context, val listUser: ArrayList<UserModel>
 
     private var mlistUser: ArrayList<UserModel> = listUser
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setList(list: ArrayList<UserModel>) {
         mlistUser = list
         notifyDataSetChanged()

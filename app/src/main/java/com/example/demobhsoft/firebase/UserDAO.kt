@@ -50,7 +50,7 @@ class UserDAO {
             }
     }
 
-    fun getListUser(): ArrayList<UserModel>{
+    fun getListUser(list: (ArrayList<UserModel>) -> Unit){
         var listUser = ArrayList<UserModel>()
         db.collection(Constant.USER.TB_USER)
             .get()
@@ -60,13 +60,13 @@ class UserDAO {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     val user: UserModel = document.toObject(UserModel::class.java)
                     listUser.add(user)
+                    list(listUser)
                 }
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
             }
         Log.d(TAG, "getListUser: listUser: ${listUser.size}")
-        return listUser
     }
 
 //    fun getUser(userId: String): UserModel{

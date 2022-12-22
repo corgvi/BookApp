@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
 import com.example.demobhsoft.model.SachModel
@@ -39,11 +40,17 @@ class TrendingBooksAdapter(val listSach: ArrayList<SachModel>, val mContext: Con
         val sach: SachModel = mListSach.get(position)
         holder.tvName.text = sach.name
         holder.tvPrice.text = ConvertToVND(sach.price)
-        Glide.with(mContext)
-            .load(sach?.thumbnail)
-            .centerCrop()
-            .placeholder(R.drawable.ic_baseline_file_download_off_24)
-            .into(holder.imgBook);
+//        Glide.with(mContext)
+//            .load(sach?.thumbnail)
+//            .centerCrop()
+//            .placeholder(R.drawable.ic_baseline_file_download_off_24)
+//            .into(holder.imgBook);
+        holder.imgBook.load(sach.thumbnail){
+            crossfade(true)
+            crossfade(500)
+            placeholder(R.drawable.ic_baseline_file_download_off_24)
+        }
+
 
         holder.imgBook.setOnClickListener {
             val intent = Intent(mContext, OrderActivity::class.java);

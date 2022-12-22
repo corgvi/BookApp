@@ -6,11 +6,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.SearchView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -27,9 +26,13 @@ import com.example.demobhsoft.screen.MainActivity.adapter.TopMemberAdapter
 import com.example.demobhsoft.screen.MainActivity.adapter.TrendingBooksAdapter
 import com.example.demobhsoft.screen.ProfileActivity
 import com.example.demobhsoft.utils.Constant
+import com.example.demobhsoft.viewmodel.MainViewModel
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 
 class MainActivity : AppCompatActivity() {
     private lateinit var userDAO: UserDAO
@@ -52,6 +55,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var popularBooksAdapter: PopularBooksAdapter
     private val db = Firebase.firestore
     private val sachDAO = SachDAO()
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProvider(
+            this,
+            MainViewModel.MainViewModelFactory(this.application, this)
+        )[MainViewModel::class.java]
+    }
+    private lateinit var user: UserModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         rcvPopularBooks = findViewById(R.id.rcv_popular_books)
         rcvTrendingBooks = findViewById(R.id.rcv_trend_books)
         mySharedPreferences = MySharedPreferences()
-        val user: UserModel? = mySharedPreferences.getModel(this)
+        user= mySharedPreferences.getModel(this)!!
 
         tvFullname.text = user?.fullName
         tvEmail.text = user?.email
@@ -79,87 +90,65 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
         userDAO = UserDAO()
-        listUser.addAll(userDAO.getListUser())
-        rcvTopMembers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        initViewModel()
         topMemberAdapter = TopMemberAdapter(this, listUser)
-        Log.d(TAG, "onCreate: listUser ${listUser.size}")
+        rcvTopMembers.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rcvTopMembers.adapter = topMemberAdapter
         getListUser()
         sachDAO.initSachModel()
-        getListSach()
         trendingBooksAdapter = TrendingBooksAdapter(listSach, this)
-        rcvTrendingBooks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rcvTrendingBooks.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rcvTrendingBooks.adapter = trendingBooksAdapter
         popularBooksAdapter = PopularBooksAdapter(listSach, this)
-        rcvPopularBooks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rcvPopularBooks.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rcvPopularBooks.adapter = popularBooksAdapter
 
-        imgCart.setOnClickListener{
+        imgCart.setOnClickListener {
             startActivity(Intent(this, CartActivity::class.java))
         }
-        getListDonHangByUserId()
         initSearchView()
+
     }
 
-    private fun getListUser(){
-        db.collection(Constant.USER.TB_USER)
-            .get()
-            .addOnSuccessListener { task ->
-                listUser.clear()
-                for (document in task) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                    val user: UserModel = document.toObject(UserModel::class.java)
-                    listUser.add(user)
+    private fun initViewModel(){
+        mainViewModel.getListSach()
+        mainViewModel.getListGioHang()
+        mainViewModel.mListSachLiveData.observe(this, Observer{
+            trendingBooksAdapter.setList(it)
+            popularBooksAdapter.setList(it)
+        })
+        mainViewModel.mListGioHangLiveData.observe(this, Observer{
+            var list = ArrayList<GioHang>()
+            for(gioHang in it){
+                if(gioHang.userId.equals(user.userId)){
+                    list.add(gioHang)
                 }
+            }
+            tvBadge.setText(list.size.toString())
+        })
+
+    }
+
+    private fun getListUser() {
+        GlobalScope.launch(Dispatchers.IO) {
+            delay(1000L)
+            var list = db.collection(Constant.USER.TB_USER)
+                .get().await().documents
+            for (user in list) {
+                listUser.add(user.toObject(UserModel::class.java)!!)
+            }
+            withContext(Dispatchers.Main) {
                 topMemberAdapter.setList(listUser)
             }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
-            }
+        }
     }
 
-    private fun getListSach(){
-
-        db.collection(Constant.SACH.TB_SACH)
-            .get()
-            .addOnSuccessListener { task ->
-                listSach.clear()
-                for (document in task) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                    val sach: SachModel = document.toObject(SachModel::class.java)
-                    listSach.add(sach)
-                }
-                trendingBooksAdapter.setList(listSach)
-                popularBooksAdapter.setList(listSach)
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
-            }
-    }
-
-    private fun getListDonHangByUserId(){
-        var total = 0
-        val user: UserModel = mySharedPreferences.getModel(this)!!
-        db.collection(Constant.GIOHANG.TB_GIOHANG)
-            .get()
-            .addOnSuccessListener { task ->
-                listGioHang.clear()
-                for(document in task){
-                    val donHang: GioHang = document.toObject(GioHang::class.java)
-                    if(user.userId.equals(donHang.userId)){
-                        listGioHang.add(donHang)
-                        tvBadge.text = listGioHang.size.toString()
-                    }
-                }
-            }
-            .addOnFailureListener{
-                Log.e(TAG, "getDonHang: ${it.message}", )
-            }
-    }
-
-    private fun initSearchView(){
+    private fun initSearchView() {
         searchView = findViewById(R.id.ed_search)
-        searchView.addTextChangedListener(object : TextWatcher{
+        searchView.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
 
@@ -169,13 +158,13 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val str = s.toString()
                 val listFilter = ArrayList<SachModel>()
-                for ( sach in listSach){
-                    if (sach.name.contains(str, true)){
+                for (sach in listSach) {
+                    if (sach.name.contains(str, true)) {
                         listFilter.add(sach)
                     }
                 }
 
-                if(s!!.isEmpty()){
+                if (s!!.isEmpty()) {
                     popularBooksAdapter.setList(listSach)
                     trendingBooksAdapter.setList(listSach)
                 } else {
@@ -189,7 +178,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        getListDonHangByUserId()
+        mainViewModel.getListGioHang()
+        mainViewModel.mListGioHangLiveData.observe(this, Observer{
+            var list = ArrayList<GioHang>()
+            for(gioHang in it){
+                if(gioHang.userId.equals(user.userId)){
+                    list.add(gioHang)
+                }
+            }
+            tvBadge.setText(list.size.toString())
+        })
     }
 
 }
