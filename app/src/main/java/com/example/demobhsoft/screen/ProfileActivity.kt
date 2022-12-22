@@ -3,22 +3,16 @@ package com.example.demobhsoft.screen
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.RenderEffect
-import android.graphics.Shader
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
@@ -73,7 +67,7 @@ class ProfileActivity : AppCompatActivity() {
         Glide.with(this)
             .load(user?.avatar)
             .centerCrop()
-            .placeholder(R.drawable.ic_baseline_file_download_off_24)
+            .placeholder(R.drawable.ic_baseline_cached_24)
             .into(imgUser);
         Glide.with(this)
             .load(user?.imgBackground)

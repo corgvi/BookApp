@@ -9,12 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
 import com.example.demobhsoft.model.SachModel
 import com.example.demobhsoft.utils.ConvertToVND
-import java.text.DecimalFormat
-import java.text.NumberFormat
 
 class PopularBooksAdapter(val listSach: ArrayList<SachModel>, val mContext: Context) :
     RecyclerView.Adapter<PopularBooksAdapter.PopularBooksViewHolder>() {
@@ -44,7 +41,7 @@ class PopularBooksAdapter(val listSach: ArrayList<SachModel>, val mContext: Cont
         holder.imgBook.load(sach.thumbnail){
             crossfade(true)
             crossfade(500)
-            placeholder(R.drawable.ic_baseline_file_download_off_24)
+            placeholder(R.drawable.ic_baseline_cached_24)
         }
     }
 

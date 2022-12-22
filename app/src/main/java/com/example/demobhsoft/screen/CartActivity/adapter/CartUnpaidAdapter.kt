@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
 import com.example.demobhsoft.model.GioHang
 import com.example.demobhsoft.model.SachModel
@@ -54,7 +52,7 @@ class CartUnpaidAdapter(val listDonHang: ArrayList<GioHang>, val mContext: Conte
                 holder.imgBook.load(sach?.thumbnail){
                     crossfade(true)
                     crossfade(500)
-                    placeholder(R.drawable.ic_baseline_file_download_off_24)
+                    placeholder(R.drawable.ic_baseline_cached_24)
                 }
                 holder.tvNameBook.text = sach?.name
                 holder.tvAmount.text = amount.toString()

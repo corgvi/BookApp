@@ -8,7 +8,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import coil.load
-import com.bumptech.glide.Glide
 import com.example.demobhsoft.R
 import com.example.demobhsoft.datalocal.MySharedPreferences
 import com.example.demobhsoft.firebase.GioHangDAO
@@ -57,7 +56,7 @@ class OrderActivity : AppCompatActivity() {
         imgBook.load(sach.thumbnail){
             crossfade(true)
             crossfade(500)
-            placeholder(R.drawable.ic_baseline_file_download_off_24)
+            placeholder(R.drawable.ic_baseline_cached_24)
         }
 
         donHangDAO = GioHangDAO()

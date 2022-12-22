@@ -79,10 +79,10 @@ class MainActivity : AppCompatActivity() {
         mySharedPreferences = MySharedPreferences()
         user= mySharedPreferences.getModel(this)!!
 
-        tvFullname.text = user?.fullName
-        tvEmail.text = user?.email
+        tvFullname.text = user.fullName
+        tvEmail.text = user.email
         Glide.with(this)
-            .load(user?.avatar)
+            .load(user.avatar)
             .centerCrop()
             .placeholder(R.drawable.ic_baseline_person_24)
             .into(imgUser);
@@ -117,6 +117,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getListSach()
         mainViewModel.getListGioHang()
         mainViewModel.mListSachLiveData.observe(this, Observer{
+            listSach.clear()
+            listSach.addAll(it)
             trendingBooksAdapter.setList(it)
             popularBooksAdapter.setList(it)
         })
